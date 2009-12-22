@@ -1,0 +1,15 @@
+Fix me:
+
+Calling jQuery.use.add() with an absolute url isn't working
+properly. Currently modules are all expected to be able to
+load from a package service.
+
+jQuery.use.add({
+	name: 'i-dont-work-right',
+	file: 'http://absoluteURL.com/file.js'
+});
+
+
+
+TODO
+Add a PHP version of the pkg service
