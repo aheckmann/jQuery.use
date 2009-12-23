@@ -23,7 +23,20 @@
 	
 	<br/>
 	
-	<textarea id="code"></textarea>
+	<textarea id="code">jQuery.use.add({
+	  name: 'test',
+	  file: [
+			'jquery-ui-accordion',
+			'http://groups.google.com/groups/style.css?ig=1&stock=1&av=4&hl=en&v=639',
+			'http://ajax.googleapis.com/ajax/libs/ext-core/3.0.0/ext-core-debug.js',
+			'jquery-fx-slide',
+		],
+	  provides: 'Ext'
+	});
+	jQuery.use('test', function ($) {
+				$('body').css('backgroundColor','#eee');	
+		});
+	</textarea>
 	
 	<label for="uiTheme">jQuery UI Theme:</label>
 	<select id="uiTheme">
@@ -40,8 +53,9 @@
 	
 	// set up our local root	
 	$.use.lib_root = "/jQuery.use/lib/1-0-0/";	
-	//$.use.service = true; 
-	//$.use.serviceURI = "/jQuery.use/pkg/";
+	$.use.service = true; 
+	$.use.combineCSS = true;
+	$.use.serviceURI = "/jQuery.use/pkg/";
 	
 	// list all available packages
 	var template = '<div class="mod">'+
@@ -108,6 +122,23 @@
 		], function ($) {
 			$('body').css('backgroundColor','#eee');	
 	});
+	
+	
+	
+	jQuery.use.add({
+	  name: 'test',
+	  file: [
+			'jquery-ui-accordion',
+			'http://groups.google.com/groups/style.css?ig=1&stock=1&av=4&hl=en&v=639',
+			'http://ajax.googleapis.com/ajax/libs/ext-core/3.0.0/ext-core-debug.js',
+			'jquery-fx-slide',
+		],
+	  provides: 'Ext'
+	});
+	jQuery.use('test', function ($) {
+				$('body').css('backgroundColor','#eee');	
+		});
+	
 	*/
 	
 
