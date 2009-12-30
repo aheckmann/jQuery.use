@@ -9,7 +9,7 @@
 
 That's all there is to it. If a plugin has CSS stylesheet dependencies or images to preload, they are downloaded as well.
 
-jQuery.use includes with it's default plugin configuration everything you need to start using jQuery with the latest version of jQuery.ui (1.7.2). You can specify a specific ui plugin, a group of ui plugins, or all of jQuery.ui. 
+jQuery.use includes with its default plugin configuration everything you need to start using jQuery with the latest version of jQuery.ui (1.7.2). You can specify a specific ui plugin, a group of ui plugins, or all of jQuery.ui. 
 Example:
 
 	jQuery.use('jquery-ui-*', function ($) { 
