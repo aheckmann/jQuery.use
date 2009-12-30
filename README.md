@@ -58,11 +58,12 @@ Example:
 ##Configuring jQuery.use 
 
 jQuery.use has a few global configuration settings that allow you to customize the following:
-- Your library's root folder (used for image downloading and when a dependency package service is not used).
-- A jQuery UI Theme you want to use
-- Enabling/disabling a *dependency package/rollup service
-- Specifying the URI of such service
-- Whether or not CSS files should utilize the service
+
+- 	Your library's root folder (used for image downloading and when a dependency package service is not used).
+- 	A jQuery UI Theme you want to use
+- 	Enabling/disabling a *dependency package/rollup service
+- 	Specifying the URI of such service
+- 	Whether or not CSS files should utilize the service
 
 To specify your library's root:
  
