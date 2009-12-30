@@ -1,5 +1,9 @@
 <%@page pageEncoding="UTF-8"%><%@page import="java.util.Hashtable, java.util.Enumeration, java.util.ArrayList, java.util.Collections, java.io.*, java.util.Calendar, java.util.SimpleTimeZone, java.lang.StringBuilder"%><%!
 
+/****************************************************
+* A starter version of a package service.
+* You will probably want to rewrite this since I'm no java expert.
+****/
 
 private String readFileAsString(String filePath) throws java.io.IOException {
     byte[] buffer = new byte[(int) new File(filePath).length()];
