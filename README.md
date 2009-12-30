@@ -42,11 +42,12 @@ Example:
 After you add your module you can immediately use it. And since `jQuery.use.add` returns `jQuery` you can chain if you want to.
 
 As you probably noticed, there are a few different properties available to your custom module configuration object.
-- name: This is the unique package key you'll utilize when calling `jQuery.use`. If the name you specified has already been taken, an exception will be thrown unless you pass true as the second argument: `jQuery.use.add(yourModuleObj, true);`
-- file: A string or array of files to include in your module. These will be requested in the order they exist in the array. Where possible, files that can be requested to the configured package service will be prepared and requested with a singe request. 
-- requires: A string or array of strings specifying other module names or URIs which need to be requested and available in the DOM before your specified @file[s] are added.
-- provides: String or array of strings specifying the actual globally accessible properties your module adds to the DOM. These properties are continually tested, and when available, your jQuery.use callback is fired. 
-- preload: String or array of strings specifying image URIs that should be preloaded.
+
+- 	name: This is the unique package key you'll utilize when calling `jQuery.use`. If the name you specified has already been taken, an exception will be thrown unless you pass true as the second argument: `jQuery.use.add(yourModuleObj, true);`
+- 	file: A string or array of files to include in your module. These will be requested in the order they exist in the array. Where possible, files that can be requested to the configured package service will be prepared and requested with a singe request. 
+- 	requires: A string or array of strings specifying other module names or URIs which need to be requested and available in the DOM before your specified @file[s] are added.
+- 	provides: String or array of strings specifying the actual globally accessible properties your module adds to the DOM. These properties are continually tested, and when available, your jQuery.use callback is fired. 
+- 	preload: String or array of strings specifying image URIs that should be preloaded.
 
 At any time you can get access to all of the existing modules by making a call to `jQuery.use.modules()` which returns the internal module registry object. If you only want a specific module returned you can optionally pass a string specifying the module name. This is useful if you ever want to extend an existing module by adding new dependencies. 
 Example:
