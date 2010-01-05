@@ -1,9 +1,12 @@
 <?php
 /***********************************************************
-* a starter version of a package service
-* You should probably rewrite this since I'm no PHP expert
+* A starter package service. Use at your own risk.
+* If writing your own you may want to look at the following
+* http://code.google.com/p/minify/ 
+* 
 */
 
+$expires = 60*60*24*365*10; // length of expires headers - 10 yrs
 $cachedir = dirname(__FILE__) . '/cache';
 $validFiles = array();
 
@@ -17,22 +20,19 @@ foreach( $_GET as $requestedFile ) {
 	}
 }
 
+$contentType = getContentType($validFiles);
+$encoding = getEncoding();
+ 
 // create unique filename based on valid file requests
 // we use this for caching to disk
-$cachefile = md5(implode('#', $validFiles));
+$cachefile = md5( implode($validFiles) . $encoding );
 $cachefullpath = $cachedir .'/'. $cachefile;
 
-$expires = 60*60*24*365*10; // 10 yrs
-$contentType = endsWith(current($_GET), '.js') ? 'text/javascript' : 'text/css';
 
-
+// check if this file has already been created/cached
 if ( file_exists($cachefullpath) ) {
 	if ( $fp = fopen($cachefullpath, 'rb') ) {
-		header("Content-Encoding: gzip");	
-		header("Content-Type: " . $contentType);
-		header("Content-Length: " . filesize($cachefullpath));
-		header('Expires: '. gmdate( 'D, d M Y H:i:s', time() + $expires ) .' GMT');
-		header('Cache-Control: max-age=' . $expires);
+		setHeaders($encoding, $contentType, filesize($cachefullpath), $expires);
 		fpassthru($fp);
 		fclose($fp);
 		exit;
@@ -40,23 +40,22 @@ if ( file_exists($cachefullpath) ) {
 }
 
 
+// request not yet cached
 $output = '';
 $pathToPkgAssets = '../lib/1-0-0/';
 foreach( $validFiles as $validFile ) {	
 	$output .= file_get_contents($pathToPkgAssets . $validFile);	
 }
 
-	
-$output = gzencode($output, 9, FORCE_GZIP);
-header("Content-Encoding: gzip");
-header("Content-Type: " . $contentType);
-header('Content-Length: ' . strlen($output));
-header('Expires: '. gmdate( 'D, d M Y H:i:s', time() + $expires ) .' GMT');
-header('Cache-Control: max-age=' . $expires);
+if ( 'none' != $encoding ) {
+	$output = gzencode($output, 9, ($encoding == 'gzip' ? FORCE_GZIP : FORCE_DEFLATE));	
+}
+
+setHeaders($encoding, $contentType, strlen($output), $expires);
+
 echo $output;
 
-
-// store the file in cache
+// store the file in disk cache
 if ($fp = fopen($cachefullpath, 'wb')) {
 	fwrite($fp, $output);
 	fclose($fp);
@@ -66,6 +65,49 @@ if ($fp = fopen($cachefullpath, 'wb')) {
 
 /* functions */
 
+function setHeaders ($encoding, $contentType, $contentLength, $expires) {
+	if ( 'none' != $encoding ) {
+		header('Content-Encoding: ' . $encoding);	
+	}	
+	header('Content-Type: ' . $contentType);
+	header('Content-Length: ' . $contentLength);
+	header('Expires: '. gmdate( 'D, d M Y H:i:s', time() + $expires ) .' GMT');
+	header('Accept-Encoding: Vary');
+}
+
+
+
+
+function getEncoding () {
+	$userAgent = $_SERVER['HTTP_USER_AGENT'];
+	$acceptEncoding = $_SERVER['HTTP_ACCEPT_ENCODING']; 
+	$encoding = 'none';
+
+	// don't encode in IE versions less than 7 to be completely safe
+	if (strpos($userAgent, 'Mozilla/4.0 (compatible; MSIE ') === 0 && 
+		strpos($userAgent, 'Opera') === false &&
+		7 > ((float)substr($userAgent, 30))
+		) {
+		// encoding already set
+	} else {	
+		if (strstr($acceptEncoding, 'gzip')) {
+			$encoding = 'gzip';
+
+		} elseif (strstr($acceptEncoding, 'deflate')) {
+			$encoding = 'deflate';		
+		}
+	}
+	return $encoding;
+}
+
+
+function getContentType ($validFiles) {
+	return endsWith(current($validFiles), '.js') ? 
+		'text/javascript' : 
+		'text/css';
+}
+
+// determines if $path is allowed
 function inWhiteList ($path) {		
 	return strpos($path, './') === false && 
 			strpos($path, '~') === false &&
@@ -76,6 +118,7 @@ function inWhiteList ($path) {
 			);
 }
 
+// determines if $string ends with $test
 function endsWith ($string, $test) {
     $strlen = strlen($string);
     $testlen = strlen($test);
