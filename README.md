@@ -92,6 +92,9 @@ Another default of jQuery.use is to not utilize a server side dependency package
 
 	$.use.combineCSS = true;
 
+###Example page:
+
+http://aaronheckmann.net:8080/examples/jQuery.use/lib/1-0-0/
 
 ###Other Notes:
 
