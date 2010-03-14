@@ -58,7 +58,7 @@ response.setContentType(contentType);
 
 
 // build up the output. 
-String pathToPkgAssets = "lib/1-0-0/";
+String pathToPkgAssets = "lib/1.1.0/";
 String appPath = application.getRealPath("/") + pathToPkgAssets; 
 String requestedFile = "";
 String fullFilePath = "";

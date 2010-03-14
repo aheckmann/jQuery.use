@@ -42,7 +42,7 @@ if ( file_exists($cachefullpath) ) {
 
 // request not yet cached
 $output = '';
-$pathToPkgAssets = '../lib/1-0-0/';
+$pathToPkgAssets = '../lib/1.1.0/';
 foreach( $validFiles as $validFile ) {	
 	$output .= file_get_contents($pathToPkgAssets . $validFile);	
 }
