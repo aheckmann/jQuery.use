@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery.use - defaults demo</title>
+	
+	<style type='text/css'>
+	#modChooser { overflow:auto; /* clears */ }
+	.modCol { float: left; margin-bottom: 10px; margin-right:20px; }
+	#code { width: 99%; height: 100px;}
+	</style>
+		
+	<script src="jquery/jquery.js"></script>
+	<script src="jquery/plugin/use/js/use.js"></script>
+	<script src="jquery/plugin/use/js/use.defaults.js"></script>
+	
+</head>
+<body>
+	<div id="modChooser"></div>
+	
+	<input type="checkbox" name="nuke" id="nuke" />
+	<label for="nuke">Nuclear Option (check all)</label>
+	
+	<br/>
+	
+	<textarea id="code">jQuery.use.add({
+	  name: 'test',
+	  file: [
+			'jquery-ui-accordion',
+			'http://groups.google.com/groups/style.css?ig=1&stock=1&av=4&hl=en&v=639',
+			'http://ajax.googleapis.com/ajax/libs/ext-core/3.0.0/ext-core-debug.js',
+			'jquery-fx-slide'
+		],
+	  provides: 'Ext'
+	});
+	jQuery.use('test', function ($) {
+				$('body').css('backgroundColor','#eee');	
+		});
+	</textarea>
+	
+	<label for="uiTheme">jQuery UI Theme:</label>
+	<select id="uiTheme">
+		<option selected="selected">base</option>
+		<option>ui-lightness</option>
+	</select>
+	
+	<br/><br/>
+	
+	<button type="button" id="execute" name="execute">Execute!</button>
+	
+	<script>
+	(function () {
+	
+	// set up our local root	
+	$.use.lib_root = "";	
+	$.use.service = true; 
+	$.use.combineCSS = true;
+	$.use.serviceURI = "../../pkg/";
+	
+	// list all available packages
+	var template = '<div class="mod">'+
+			'<input type="checkbox" name="${name}" id="${name}" value="${name}" />'+
+			'<label for="${name}">${name}</label></div>',
+		$modChooser = jQuery("#modChooser"),
+		mod,
+		mods = $.use.modules(),
+		i = 0,
+		$col
+	;
+		
+	for (mod in mods) {
+		if (i % 16 == 0) {
+			$col = $("<div class='modCol'/>");
+			$modChooser.append($col);	
+		}
+			
+		$col.append( template.replace(/\${name}/g, mod) );		
+		i++;
+	}
+	
+	// code generation
+	var $code = $("#code"),
+		genCode = function () {
+			var mods = $modChooser.find(":checked")
+				.map(function(){
+					return "'"+this.value+"'";
+				}).get();
+		
+			$code.val( 'jQuery.use([\n' + mods.join(', ') + '\n], function () {\n    alert("Done!");\n})' );
+		}
+	;
+	
+	
+	$modChooser.bind("click", function (e) {
+		if ($(e.target).is(":checkbox"))
+			genCode();
+	});
+	
+	
+	$("#execute").bind("click", function () {
+		// theme chosing (manual setup)
+		jQuery.use.uiTheme = jQuery("#uiTheme").val();
+		
+		eval( $code.val() );
+	});
+	
+	
+	$("#nuke").click(function () {
+		var on = $("#nuke").is(':checked');
+		$modChooser.find("input").each(function(){
+			this.checked = on;
+		});
+		genCode();
+	});
+	
+	/*
+	//  fetch module[s], specific js file[s], or specific css file[s]
+	jQuery.use([
+		'jquery-ui-accordion',
+		'http://groups.google.com/groups/style.css?ig=1&stock=1&av=4&hl=en&v=639',
+		'http://ajax.googleapis.com/ajax/libs/ext-core/3.0.0/ext-core-debug.js'
+		], function ($) {
+			$('body').css('backgroundColor','#eee');	
+	});
+	
+	
+	
+	jQuery.use.add({
+	  name: 'test',
+	  file: [
+			'jquery-ui-accordion',
+			'http://groups.google.com/groups/style.css?ig=1&stock=1&av=4&hl=en&v=639',
+			'http://ajax.googleapis.com/ajax/libs/ext-core/3.0.0/ext-core-debug.js',
+			'jquery-fx-slide',
+		],
+	  provides: 'Ext'
+	});
+	jQuery.use('test', function ($) {
+				$('body').css('backgroundColor','#eee');	
+		});
+	
+	*/
+	
+
+	})();
+	</script>
+
+</body>
+</html>
